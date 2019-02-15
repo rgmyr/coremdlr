@@ -1,0 +1,1 @@
+python hyperopt_experiment.py --name deepten_hyperopt --tpe --max_evals 10 --gpu 1 '{"dataset": "FaciesPatchDataset", "dataset_args": {"wells": ["204-19-6", "204-20-6a", "205-21b-3"], "input_shape": [200,600,3]}, "model": "TextureModel", "network": "deepten", "train_args": {"batch_size": 12, "epochs": 15}}'
