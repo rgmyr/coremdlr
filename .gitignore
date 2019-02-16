@@ -1,0 +1,13 @@
+*.ipynb_checkpoints*
+*__pycache__*
+*egg-info*
+
+*.pyc
+*.npy
+*.pkl
+*.h5
+
+*.tif
+*.jpg
+*.png
+
