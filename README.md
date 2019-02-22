@@ -2,10 +2,9 @@
 
 This repo has been split from the original `corebreakout` package to provide just the modeling components of the project. It is assumed that datasets have already been created or are available from `corebreakout` (which is now the just segmentation + labeling tools).
 
+## Functionality
 
-## Goals for Functionality
-
-`coremdlr` aims to facilitate research on the modeling of lithology and facies in core + log datasets using both deep learning / computer vision and traditional machine learning approaches.
+`coremdlr` aims to facilitate research on the modeling of lithology and facies in core photo + well log datasets using both deep learning / computer vision and traditional machine learning approaches.
 
 ## Requirements
 
@@ -21,27 +20,24 @@ Individual scripts and notebooks may require some other libraries.
 
 ## Setup Notes
 
-Submodules in this package use absolute imports. You should be able to
-use `pip` to do a local develop mode install:
+Submodules in this package use absolute imports. You should be able to use `pip` to do a local develop mode install:
 
 ```bash
 $ pip install -e path/to/coremdlr
 ```
 
-This is the recommended option, because it will automatically try to
-install any dependencies you don't already have -- but alternatively,
-you can add the root directory add to your `PYTHONPATH`:
+This is the recommended option since it will automatically try to install any dependencies you don't already have. But alternatively, you can add the root directory add to your `PYTHONPATH`:
 
 ```bash
 $ cd path/to/coremdlr
 $ export PYTHONPATH=$PYTHONPATH:`pwd`
 ```
 
-## Data
+## Code & Module Organization
 
 TODO
 
-## Code & Module Organization
+## Data
 
 TODO
 

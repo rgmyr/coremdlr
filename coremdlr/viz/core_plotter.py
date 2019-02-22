@@ -1,8 +1,7 @@
 """
 Core data plotting API.
 
-Ideally, this should use as little external information as possible, to facilitate code reuse
-in seperate segmentation + modeling tools.
+Copied this file out here because I plan to make it into its own package.
 """
 import numpy as np
 
@@ -10,7 +9,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-from coremdlr.config import strip_config
+from coremdlr.facies.config import strip_config
 
 
 # tuple subclass for individual axis
@@ -118,6 +117,7 @@ class CorePlotter():
         Parameters
         ----------
         striplog : strilog.StripLog instance
+            The labels to plot as a Striplog.
         name : str, optional
             Name for axis.
         legend : striplog.Legend, optional
@@ -127,6 +127,8 @@ class CorePlotter():
         striplog[0].top = self.top
         striplog[-1].base = self.base
         striplog.plot(ax=ax, legend=legend)
+
+        return self.fig, self.ax
 
 
     def get_ax_by_name(self, name):
@@ -187,6 +189,8 @@ class CorePlotter():
 
         Returns
         -------
+        major_ticks, major_locs, minor_ticks, minor_locs
+
         ticks : list of tick strings
         locs : list of tick locations in image data coordinates (fractional row indices)
         """
