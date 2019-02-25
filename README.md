@@ -35,17 +35,17 @@ $ export PYTHONPATH=$PYTHONPATH:`pwd`
 
 ## Code & Module Organization
 
+**`coremdlr.config`** : default paths / labels / dataset args / viz properties
+
 **`coremdlr.datasets`** : loading / preprocessing / generating data
 
-**`coremdlr.models`** : heirarchical set of generic model classes
+**`coremdlr.experiments`** : modeling experiment scripts / notebooks 
 
-**`coremdlr.experiments`** : experiment scripts/notebooks 
+**`coremdlr.models`** : hierarchical set of generic model classes
 
 **`coremdlr.networks`** : `tf.keras` network creation functions
 
 **`coremdlr.layers/.ops`** : `tf.keras` custom layers and tensor operations
-
-**`coremdlr.config`** : configuration of default paths / dataset args / viz properties
 
 **`coremdlr.viz`** : core data and analysis (e.g., conf. matrix) plotting
 
