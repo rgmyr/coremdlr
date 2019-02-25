@@ -8,6 +8,13 @@ from sklearn import preprocessing
 from skimage import transform
 from skimage.color import rgb2gray
 
+from coremdlr.config.defaults import DEFAULT_TRAIN_PATH
+
+
+def available_wells(path=DEFAULT_TRAIN_PATH):
+    return set([p.name.split('_')[0] for p in pathlib.Path(path).glob('*.npy')])
+
+
 ############################
 ### PseudoGR Computation ###
 ############################

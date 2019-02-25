@@ -4,7 +4,7 @@ from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # import dataset classes here
-from coremdlr.facies import models
+from coremdlr import models
 from coremdlr.models import PredictorModel
 #from coremdlr.datasets.generator import DatasetGenerator
 

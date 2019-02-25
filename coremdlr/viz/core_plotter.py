@@ -9,7 +9,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-from coremdlr.facies.config import strip_config
+from coremdlr.config import strip_config
 
 
 # tuple subclass for individual axis

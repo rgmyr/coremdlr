@@ -12,7 +12,7 @@ def keras_network_diagram(model, to_file=None, **kwargs):
     """
     Save pydot graph of network, or return it as SVG object.
     """
-    if to_file is not None:
+    if to_file:
         keras_utils.plot_model(model, to_file=to_file, **kwargs)
     else:
         dot_graph = keras_utils.vis_utils.model_to_dot(model, **kwargs)
@@ -22,6 +22,7 @@ def keras_network_diagram(model, to_file=None, **kwargs):
 def confusion_matrix_plot(cm, classes,
                           normalize=False,
                           title=None, ax=None,
+                          figsize=(10,10),
                           cmap=plt.cm.Blues):
     """
     Plot a confusion matrix, return matplotlib Axes.
@@ -29,7 +30,7 @@ def confusion_matrix_plot(cm, classes,
     Parameters
     ----------
     cm : array, dict, or DataFrame
-        Confusion matrics, or data structure containing y_true & y_pred.
+        Confusion matrix, or data structure containing y_true & y_pred.
         If dict or DataFrame, must have 'y_true' and 'y_pred' keys.
         If column array, should contain y_true in first column, y_pred in second.
         Otherwise, should be square matrix with all dims == len(classes).
@@ -53,18 +54,27 @@ def confusion_matrix_plot(cm, classes,
         title = 'Raw confusion matrix'
 
     if ax is None:
-        ax = plt.gca()
+        fig, ax = plt.subplots(figsize=figsize)
 
     im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
     ax.grid(False)
     #plt.colorbar(im, ax=ax)
 
+    # Plot Labels
     ax.set_title(title)
-    tick_marks = np.arange(len(classes))
-    ax.set_xticks(tick_marks, classes)
-    ax.tick_params(axis='x', labelrotation=45)
-    ax.set_yticks(tick_marks, classes)
 
+    tick_marks = np.arange(len(classes))
+
+    ax.set_ylabel('True label')
+    ax.set_yticks(tick_marks)
+    ax.set_yticklabels(classes)
+
+    ax.set_xlabel('Predicted label')
+    ax.set_xticks(tick_marks) 
+    ax.set_xticklabels(classes)
+    ax.tick_params(axis='x', labelrotation=45)
+
+    # CM cell values
     fmt = '.2f' if normalize else 'd'
     thresh = cm.max() / 2.
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
@@ -73,7 +83,5 @@ def confusion_matrix_plot(cm, classes,
                 color="white" if cm[i, j] > thresh else "black")
 
     plt.tight_layout()
-    ax.set_ylabel('True label')
-    ax.set_xlabel('Predicted label')
 
     return ax
