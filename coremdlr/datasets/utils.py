@@ -145,7 +145,6 @@ def crop_or_pad_image(img, width, downsample=1):
             return np.hstack([lhs, img, rhs])
 
 
-
 def downsample(data, factor, fn=None):
     """
     Downsample data by integer factor using `fn` to aggregate.

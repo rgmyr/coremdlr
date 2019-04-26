@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from xgboost import XGBClassifier
 from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
@@ -26,6 +27,26 @@ DEFAULT_XBG_ARGS = {
 DEFAULT_SVC_ARGS = {
     'probability' : True
 }
+
+
+def cls_report_to_csv(report):
+    """
+    Turn a classification report into a pd.DataFrame
+    """
+    report_data = []
+    lines = report.split('\n')
+
+    for line in lines[2:-3]:
+        row = {}
+        row_data = list(filter(None, line.split()))
+        row['class'] = row_data[0]
+        row['precision'] = float(row_data[1])
+        row['recall'] = float(row_data[2])
+        row['f1_score'] = float(row_data[3])
+        row['support'] = float(row_data[4])
+        report_data.append(row)
+
+    return pd.DataFrame.from_dict(report_data)
 
 
 class FeaturePredictor(PredictorModel):
@@ -79,7 +100,9 @@ class FeaturePredictor(PredictorModel):
 
         self.model.fit(X_train, y_train, **fit_args)
 
-        return self.evaluate(dataset.X_test, dataset.y_test, print_report=fit_args.pop('verbose', True))
+        return self.evaluate(dataset.X_test, dataset.y_test,
+                            print_report=fit_args.pop('verbose', True),
+                            save_report=fit_args.get('save_report'))
 
 
     def predict(self, X):
@@ -94,16 +117,23 @@ class FeaturePredictor(PredictorModel):
         return self.model.predict_proba(X_features)
 
 
-    def evaluate(self, X, y, print_report=False):
-        '''Return mean accuracy of predict(X).'''
+    def evaluate(self, X, y, print_report=False, save_report=None):
+        '''
+        Return mean accuracy of predict(X).
+        '''
         X_features = self.collect_features(X)
         y_pred = self.model.predict(X_features)
         y_true = y.argmax(-1) if y.ndim > 1 else y
         acc = accuracy_score(y_true, y_pred)
-        if print_report:
-            print(classification_report(y_true, y_pred, target_names=self.classes))
-            print("Total accuracy Score : ", acc)
-            print("Confusion Matrix: \n", confusion_matrix(y_true, y_pred))
+
+        if print_report or save_report:
+            cls_report = classification_report(y_true, y_pred, target_names=self.classes)
+            if print_report:
+                print(cls_report, "\nTotal accuracy Score : ", acc)
+                print("Confusion Matrix: \n", confusion_matrix(y_true, y_pred))
+            if save_report:
+                cls_report_to_csv(cls_report).to_csv(save_report+f'_{round(acc*100, 2)}.csv')
+
         return acc
 
 

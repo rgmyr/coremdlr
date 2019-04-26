@@ -1,12 +1,11 @@
-'''
+"""
 Keras 2.0+ / TensorFlow implementation of learnable encoding layer proposed in:
 
     Hang Zhang, Jia Xue, and Kristin Dana. "Deep TEN: Texture Encoding Network."
     *The IEEE Conference on Computer Vision and Pattern Recognition (CVPR) 2017*
 
 Borrows from PyTorch implementation released by Hang Zhang: https://github.com/zhanghang1989/PyTorch-Encoding
-'''
-
+"""
 import tensorflow as tf
 from tensorflow.keras.layers import Layer
 from keras import backend as K
@@ -93,13 +92,17 @@ class Encoding(Layer):
             raise ValueError('Encoding input should have shape BxNxD or BxHxWxD')
 
         # Residual vectors
+        R = x - self.codes
+
+        """Residual vectors: OLD WAY
         n = x.shape[1]
         _x_i = K.repeat_elements(x, self.K, 1)
         _c_k = K.tile(self.codes, (n, 1))
         R = K.reshape(_x_i - _c_k, (-1, n, self.K, self.D))
+        """
 
-        # Assignment weights, optional dropout
-        if self.dropout_rate is not None:
+        # Assignment weights, optional dropout when training
+        if self.dropout_rate and K.learning_phase():
             W_ik = K.softmax(scaledL2(R, K.dropout(self.scale, self.dropout_rate)))
         else:
             W_ik = K.softmax(scaledL2(R, self.scale))

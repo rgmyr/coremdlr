@@ -143,6 +143,7 @@ class KernelPooling(Layer):
             self.gamma = gamma
         super(KernelPooling, self).__init__(**kwargs)
 
+
     def build(self, input_shape):
         #self._shapecheck(input_shape)
         # Initialize composition weights, RBF approximation
@@ -157,7 +158,7 @@ class KernelPooling(Layer):
         self.sketch_matrices = []
         h_seeds = range(self.h_seed, self.h_seed+self.p)
         s_seeds = range(self.s_seed, self.s_seed+self.p)
-        for hs, ss in zip(h_seeds,s_seeds):
+        for hs, ss in zip(h_seeds, s_seeds):
             np.random.seed(hs)
             h_t = np.random.randint(self.d, size=self.C)
             np.random.seed(ss)
@@ -206,6 +207,7 @@ class KernelPooling(Layer):
         phi_x = tf.multiply(tf.sign(phi_x),tf.sqrt(tf.abs(phi_x)+1e-12))
 
         return tf.nn.l2_normalize(phi_x, axis=-1)
+
 
     def compute_output_shape(self, input_shape):
         return (input_shape[0], 1+input_shape[-1]+(self.p-1)*self.d)
