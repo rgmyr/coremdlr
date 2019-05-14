@@ -278,7 +278,7 @@ class WellLoader:
             raise ValueError('Something is fishy...')
 
         intervals = []
-        facies_keys = list(strip_config.keys())
+        facies_keys = list(strip_config.facies.keys())
 
         current_label = labels[0]
         current_top, current_bottom = self._tops[0], self._bottoms[0]
