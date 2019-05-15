@@ -58,7 +58,7 @@ class CorePlotter():
         return self.fig, self.ax
 
 
-    def plot_log(self, depths, log, existing_ax=False, scatter=False, **kwargs):
+    def plot_log(self, depths, log, name='Logs', scatter=False, xlim=None, precision=0.1, **kwargs):
         """
         Plot a log or log-like data.
 
@@ -75,27 +75,27 @@ class CorePlotter():
         **kwargs : optional
             Args for plot/scatter/tick functions. Use `fmt` arg for format strings.
         """
-        #ax = self.get_ax_by_name(kwargs.pop('name', 'Logs'))
-        #ax = self._add_new_ax(name=kwargs.pop('name', 'Logs'))
-        ax = None
-        # TODO: fix this part
-
         top = getattr(self, 'top', depths[0])
         base = getattr(self, 'base', depths[-1])
 
-        if not existing_ax or (ax is None):
-            ax = self._add_new_ax(name='Logs')
+        if name not in self.ax_names:
+            ax = self._add_new_ax(name)
             ax.invert_yaxis()
 
-            precision = kwargs.get('precision', 0.1)
-            ax.yaxis.set_ticks(np.arange(base, top-precision, -precision))
+            if precision:
+                ax.yaxis.set_ticks(np.arange(base, top-precision, -precision))
 
         else:
-            ax = ax.twiny()
+            ax = self.get_ax_by_name(name)
+            #ax = ax.twiny()
 
-        lmin, lmax = log.min(), log.max()
-        dx = lmax - lmin
-        ax.set_xlim(lmin-0.1*dx, lmax+0.1*dx)
+        #Set limits (default 10% on each side for now)
+        if not xlim:
+            lmin, lmax = np.nanmin(log), np.nanmax(log)
+            dx = lmax - lmin
+            xlim = (lmin-0.1*dx, lmax+0.1*dx)
+
+        ax.set_xlim(*xlim)
         ax.set_ylim(base, top)
 
         ax.tick_params(axis='x', labelcolor=kwargs.get('color', 'blue'))
@@ -151,7 +151,11 @@ class CorePlotter():
     def _add_new_ax(self, name=None):
         """
         Add an axis to self.axes and return it. For now, always added to the right.
+        If `name` is already an existing axis, will return that axis.
         """
+        if name in self.ax_names:
+            return self.get_ax_by_name(name)
+
         self.ncols += 1
         for i, (ax, ax_name) in enumerate(zip(self.fig.axes, self.ax_names)):
             #print(f'Changing ax {ax_name} geom to: {(1,self.ncols,i+1)}')

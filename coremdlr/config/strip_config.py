@@ -34,7 +34,7 @@ def lithology_to_key(lithology_str):
 collapsed_facies = [Component({'lithology': 'sandstone', 'train':'y'}),
                     Component({'lithology': 'clay-prone sandstone', 'train':'y'}),
                     Component({'lithology': 'sandy mudstone', 'train':'y'}),
-		    Component({'lithology': 'oilstained', 'train':'y'}),
+		            Component({'lithology': 'oilstained', 'train':'y'}),
                     Component({'lithology': 'mudstone', 'train':'y'})]
 
 
