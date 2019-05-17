@@ -12,6 +12,7 @@ from scipy.stats import mode
 from scipy.interpolate import interp1d
 
 from striplog import Interval, Striplog
+from striplog.striplog import StriplogError
 
 from coremdlr.config import defaults, strip_config
 from coremdlr.datasets import utils as datasets_utils
@@ -249,6 +250,13 @@ class WellLoader:
 
         return file_path
 
+    def slice_data(self, top=None, base=None):
+        """
+        Slice `self.X` features in place, return self.
+        """
+        good_idxs = np.logical_and(self.X['top'] >= top)
+
+
     def del_unnecessary_data(self):
         """
         Deallocate all significant data attributes that aren't strictly required for
@@ -299,8 +307,13 @@ class WellLoader:
                 # open new interval
                 current_label = labels[i]
                 current_top, current_bottom = self._tops[i], self._bottoms[i]
+        try:
+            striplog = Striplog(intervals)
+        except StriplogError as e:
+            print(e)
+            for iv in intervals:
+                print(f'top: {iv.top}, base: {iv.base}, order: {iv.order}')
 
-        striplog = Striplog(intervals)
 
         if save_csv is not None:
             df = pd.read_csv(StringIO(striplog.to_csv()))

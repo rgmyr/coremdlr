@@ -172,7 +172,8 @@ class CorePlotter():
                           major_precision=0.1,
                           major_format_str='{:.1f}',
                           minor_precision=0.01,
-                          minor_format_str='{:.2f}'):
+                          minor_format_str='{:.2f}',
+                          **kwargs):
         """
         Generate major & minor (ticks, locs) for an image axis.
 
