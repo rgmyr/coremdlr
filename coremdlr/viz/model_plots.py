@@ -1,5 +1,6 @@
-"""Model diagrams and perfomance plots."""
-
+"""
+Model diagrams and perfomance plots, etc.
+"""
 import numpy as np
 import pandas as pd
 import itertools
@@ -70,7 +71,7 @@ def confusion_matrix_plot(cm, classes,
     ax.set_yticklabels(classes)
 
     ax.set_xlabel('Predicted label')
-    ax.set_xticks(tick_marks) 
+    ax.set_xticks(tick_marks)
     ax.set_xticklabels(classes)
     ax.tick_params(axis='x', labelrotation=45)
 
