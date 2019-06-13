@@ -10,9 +10,18 @@ from skimage.color import rgb2gray
 
 from coremdlr.config.defaults import DEFAULT_TRAIN_PATH
 
+#################################
+### Dataset/Wells Information ###
+#################################
 
 def available_wells(path=DEFAULT_TRAIN_PATH):
     return set([p.name.split('_')[0] for p in pathlib.Path(path).glob('*.npy')])
+
+
+def infer_test_wells(train_wells, path=DEFAULT_TRAIN_PATH):
+    """Get the wells in `available_wells` but not in `train_wells`"""
+    all_wells = available_wells(path=path)
+    return [w for w in all_wells if w not in train_wells]
 
 
 ############################
@@ -124,14 +133,30 @@ def load_logs_clean(logs_df, which_logs):
     return logs_df[which_logs]
 
 
-def crop_or_pad_image(img, width, downsample=1):
+def find_best_crop(img, width, minval=1e-2):
+    """
+    Get the (left, right) indexes of a `width` crop s.t. as many valid pixels as possible are included.
+    """
+    if width >= img.shape[1]:
+        return (0, img.shape[1])
+    else:
+        col_counts = (img > minval).sum(axis=0)
+        left_idx = np.convolve(col_counts, np.ones(width), mode='valid').argmax()
+        return (left_idx, left_idx + width)
+
+
+def crop_or_pad_image(img, width, method='center'):
     """
     Make image_width = `width` by center cropping or padding as necessary.
+
+    TODO: add 'density' option for width cropping
     """
     # Crop/pad image to width
     width_diff = width - img.shape[1]
     if width_diff == 0:
         return img
+
+    
     else:
         l = abs(width_diff) // 2
         r = abs(width_diff) // 2 + abs(width_diff) % 2
