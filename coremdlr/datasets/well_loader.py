@@ -150,7 +150,9 @@ class WellLoader:
 
         if self.use_image or self.use_pseudoGR:
             image = np.load(str(self.image_path)).astype(np.float32)
-            self._image = datasets_utils.crop_or_pad_image(image, self.image_args['image_width'])
+            self._image = datasets_utils.crop_or_pad_image(image,
+                                                          self.image_args['image_width'],
+                                                          self.image_args['crop_method'])
             self._image = datasets_utils.downsample(self._image, self.downsample)
 
         if self.use_pseudoGR:

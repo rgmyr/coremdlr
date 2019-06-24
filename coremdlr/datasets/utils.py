@@ -156,7 +156,10 @@ def crop_or_pad_image(img, width, method='center'):
     if width_diff == 0:
         return img
 
-    
+    if method == 'best' and width_diff < 0:
+        l, r = find_best_crop(img, width)
+        return img[:,l:r,:]
+
     else:
         l = abs(width_diff) // 2
         r = abs(width_diff) // 2 + abs(width_diff) % 2

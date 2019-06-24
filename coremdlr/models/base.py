@@ -175,6 +175,7 @@ class PredictorModel(BaseModel):
         X, y = self.data.get_well_data(well_name, include_meta=True)
 
         probas = self.predict_proba(X)
+        print('probas: ', probas)
         preds = np.argmax(probas, axis=1)
 
         df = pd.DataFrame({

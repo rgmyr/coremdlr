@@ -47,6 +47,7 @@ TRAIN_SETS_9 = [
 
 DEFAULT_IMAGE_ARGS = {
     'image_width' : 600,
+    'crop_method' : 'best',
     'scale_by': 'dataset',
     'scaler' : 'caffe'
 }
