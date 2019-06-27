@@ -65,5 +65,5 @@ DEFAULT_LOGS_ARGS = {
     'interp_kind' : 'linear',
     'fill_mode' : 'mean',
     'scale_by' : 'well',
-    'scaler' : 'standard'
+    'scaler' : 'robust'
 }
