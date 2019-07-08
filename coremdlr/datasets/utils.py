@@ -140,8 +140,8 @@ def find_best_crop(img, width, minval=1e-2):
     if width >= img.shape[1]:
         return (0, img.shape[1])
     else:
-        col_counts = (img > minval).sum(axis=0)
-        left_idx = np.convolve(col_counts, np.ones(width), mode='valid').argmax()
+        col_counts = (img[:,:,0] > minval).sum(axis=0)
+        left_idx = np.convolve(np.squeeze(col_counts), np.ones(width), mode='valid').argmax()
         return (left_idx, left_idx + width)
 
 
