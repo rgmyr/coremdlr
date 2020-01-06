@@ -101,7 +101,7 @@ class NetworkModel(FeatureModel, PredictorModel):
             epochs=self.fit_args['epochs'],
             callbacks=callbacks,
             validation_data=val_gen,
-            use_multiprocessing=True,
+            use_multiprocessing=False,
             workers=1,
             shuffle=False
         )
