@@ -54,7 +54,7 @@ class FeaturePredictor(PredictorModel):
 
     Parameters
     ----------
-.
+
     model_args : dict, optional
         Parameters for constuctor & fit methods of chosen predictor type.
     """
