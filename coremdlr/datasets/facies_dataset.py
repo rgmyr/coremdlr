@@ -35,6 +35,8 @@ class FaciesDataset():
     features : list(str), optional
         Which patch features to aggregate and load, default=['image'].
         All elements must be one of {'image', 'pseudoGR', 'logs'}.
+    labels_ext: str, optional
+        File extention of label arrays to use, default='_labels.npy'
     label_resolution : int, optional
         Number of image/depth rows to aggregated into individual labeled sections of core, default=32.
         The resolution should be chosen thoughtfully w.r.t. image and pseudoGR network strides.
@@ -56,6 +58,7 @@ class FaciesDataset():
     def __init__(self, wells, test_wells=[],
                 data_dir='',
                 features=['image'],
+                labels_ext='_labels.npy',
                 label_resolution=32,
                 collapse_missing=True,
                 downsample=None,
@@ -71,10 +74,14 @@ class FaciesDataset():
         #self.seed = random_seed
 
         # classes info
-        self.labels = np.array(list(lithology_classes.keys()), dtype='a2').tolist()
+        if type(lithology_classes) is dict:
+            self.labels = np.array(list(lithology_classes.keys()), dtype='a2').tolist()
+            self.classes = list(lithology_classes.values())
+        else:
+            self.labels, self.classes = lithology_classes, lithology_classes
+
         self.label_resolution = label_resolution
-        self.classes = list(lithology_classes.values())
-        self.num_classes = len(self.classes)-2 if collapse_missing else len(self.classes)
+        self.num_classes = len(self.classes)-1 if collapse_missing else len(self.classes)
         self.output_shape = (self.num_classes,)
 
         # feature options
@@ -91,6 +98,7 @@ class FaciesDataset():
                                 label_resolution=label_resolution,
                                 collapse_missing=collapse_missing,
                                 use_dummy_labels=False if len(test_wells) > 0 else True,
+                                labels_ext=labels_ext,
                                 use_image='image' in features,
                                 use_pseudoGR='pseudoGR' in features,
                                 use_logs='logs' in features,
@@ -103,6 +111,7 @@ class FaciesDataset():
         self.test_wells = [WellLoader(os.path.join(data_dir, test_well_name),
                                      label_resolution=label_resolution,
                                      collapse_missing=collapse_missing,
+                                     labels_ext=labels_ext,
                                      use_image='image' in features,
                                      use_pseudoGR='pseudoGR' in features,
                                      use_logs='logs' in features,

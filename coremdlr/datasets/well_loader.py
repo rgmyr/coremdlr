@@ -84,6 +84,7 @@ class WellLoader:
                  label_resolution=32,
                  collapse_missing=True,
                  use_dummy_labels=False,
+                 labels_ext='_labels.npy',
                  use_image=True,
                  use_pseudoGR=False,
                  use_logs=False,
@@ -110,7 +111,7 @@ class WellLoader:
 
         # check for labels
         if not self.use_dummy_labels:
-            self.labels_path = self._get_data_path('_labels.npy', assert_exists=True)
+            self.labels_path = self._get_data_path(labels_ext, assert_exists=True)
         else:
             print('Loading well with dummy labels. DO NOT TRAIN ON THIS WELL!')
             assert self.collapse_missing, 'Always collapse the dummy labels.'
@@ -221,7 +222,7 @@ class WellLoader:
 
 
         # Remove 0's and 1's from data if `collapse_missing`
-        collapse_fn = lambda x: x[np.where(self._y > 1)] if self.collapse_missing else lambda x: x
+        collapse_fn = lambda x: x[np.where(self._y > 0)] if self.collapse_missing else lambda x: x
         self.X = {'depth': collapse_fn(depth),
                   'top'  : collapse_fn(self._tops),
                   'base' : collapse_fn(self._bottoms)}
@@ -236,7 +237,7 @@ class WellLoader:
             self.X['logs'] = np.array([(self._logs(d)).flatten() for d in self.X['depth']])
 
         self.y = collapse_fn(self._y)
-        self.y = self.y - 2 if self.collapse_missing else self.y
+        self.y = self.y - 1 if self.collapse_missing else self.y
 
         print('Feature shapes: ', [(k, v.shape) for k, v in self.X.items()])
 
