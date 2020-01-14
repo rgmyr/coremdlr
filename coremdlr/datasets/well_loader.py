@@ -335,14 +335,14 @@ class WellLoader:
     def _expand_preds(self, preds):
         """
         Make new preds array by 'uncollapsing' preds like self._y labels.
-        In other words, keep [0,1] labels from self._y + fill in new labels from preds.
+        In other words, keep [0] labels from self._y + fill in new labels from preds.
         """
         if not self.collapse_missing:
             return preds
         else:
             preds = np.argmax(preds, axis=1) if preds.ndim > 1 else preds
             labels = np.copy(self._y)
-            labels[np.where(labels > 1)] = (preds + 2)
+            labels[np.where(labels > 0)] = (preds + 1)
             print(np.bincount(self._y))
             print(np.bincount(labels))
             return labels
