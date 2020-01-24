@@ -75,7 +75,8 @@ class NetworkModel(FeatureModel, PredictorModel):
             'batch_size' : self.fit_args.get('batch_size', 1),
             'feature' : self.feature,
             'augment_fn' : None,
-            'format_fn' : None
+            'format_fn' : None,
+            'shuffle' : False,
         }
         callbacks = self.fit_args.pop('callbacks', [])
 
@@ -103,7 +104,7 @@ class NetworkModel(FeatureModel, PredictorModel):
             validation_data=val_gen,
             use_multiprocessing=False,
             workers=1,
-            shuffle=False
+            shuffle=True, #False
         )
 
         return min(hist.history['val_loss'])

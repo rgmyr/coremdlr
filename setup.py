@@ -19,6 +19,7 @@ install_requires = [
       'scikit-image >= 0.13.1',
       'matplotlib',
       'lasio',
+      'dill',
       'striplog',
       'scikit-learn',
       'imgaug',
