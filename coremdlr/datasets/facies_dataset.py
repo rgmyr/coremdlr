@@ -76,12 +76,13 @@ class FaciesDataset():
         # classes info
         if type(lithology_classes) is dict:
             self.labels = np.array(list(lithology_classes.keys()), dtype='a2').tolist()
+            print(self.labels)
             self.classes = list(lithology_classes.values())
         else:
             self.labels, self.classes = lithology_classes, lithology_classes
 
         self.label_resolution = label_resolution
-        self.num_classes = len(self.classes)-1 if collapse_missing else len(self.classes)
+        self.num_classes = len(self.classes)-2 if collapse_missing else len(self.classes)
         self.output_shape = (self.num_classes,)
 
         # feature options

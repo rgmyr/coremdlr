@@ -222,7 +222,7 @@ class WellLoader:
 
 
         # Remove 0's and 1's from data if `collapse_missing`
-        collapse_fn = lambda x: x[np.where(self._y > 0)] if self.collapse_missing else lambda x: x
+        collapse_fn = lambda x: x[np.where(self._y > 1)] if self.collapse_missing else lambda x: x
         self.X = {'depth': collapse_fn(depth),
                   'top'  : collapse_fn(self._tops),
                   'base' : collapse_fn(self._bottoms)}
@@ -237,7 +237,7 @@ class WellLoader:
             self.X['logs'] = np.array([(self._logs(d)).flatten() for d in self.X['depth']])
 
         self.y = collapse_fn(self._y)
-        self.y = self.y - 1 if self.collapse_missing else self.y
+        self.y = self.y - 2 if self.collapse_missing else self.y
 
         print('Feature shapes: ', [(k, v.shape) for k, v in self.X.items()])
 
@@ -342,7 +342,7 @@ class WellLoader:
         else:
             preds = np.argmax(preds, axis=1) if preds.ndim > 1 else preds
             labels = np.copy(self._y)
-            labels[np.where(labels > 0)] = (preds + 1)
+            labels[np.where(labels > 1)] = (preds + 2)
             print(np.bincount(self._y))
             print(np.bincount(labels))
             return labels
