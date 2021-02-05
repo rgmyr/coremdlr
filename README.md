@@ -1,5 +1,7 @@
 # `coremdlr`
 
+*Note, this repo is part of research that has been submitted to **[Frontiers Earth Science](https://www.frontiersin.org/journals/earth-science)**, the paper name and DOI will be included once released!*
+
 This repo has been split from the original `corebreakout` package to provide just the modeling components of the project. It is assumed that datasets have already been created or are available from `corebreakout` (which is now the just segmentation + labeling tools).
 
 ## Functionality
@@ -15,6 +17,8 @@ Base requirements:
 -   `scikit-image`
 -   `scikit-learn`
 -   `tensorflow.keras`
+
+Pre-processing of UK core image data, check out **[CoreBreakout](https://joss.theoj.org/papers/10.21105/joss.01969.pdf)**.
 
 Individual scripts and notebooks may require some other libraries.
 
@@ -51,5 +55,4 @@ $ export PYTHONPATH=$PYTHONPATH:`pwd`
 
 ## Data
 
-Current data consists of 12 North Sea wells. Need to work on standardizing label scheme.
-
+Current data consists of 12 UK Contiential Shelf wells from Q204 and Q205. Please check out the data folder for more information and licensing. 
