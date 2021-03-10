@@ -19,6 +19,7 @@ install_requires = [
       'scikit-image >= 0.13.1',
       'matplotlib',
       'lasio',
+      'dill',
       'striplog',
       'scikit-learn',
       'imgaug',
@@ -32,11 +33,6 @@ setup(name='coremdlr',
       author='Ross Meyer',
       author_email='ross.meyer@utexas.edu',
       packages=find_packages(PACKAGE_PATH),
-      install_requires=[
-            'numpy >= 1.13.0',
-            'scipy >= 1.0.0',
-            'scikit-image >= 0.13.1',
-            'matplotlib'
-      ],
+      install_requires=install_requires,
       zip_safe=False
 )

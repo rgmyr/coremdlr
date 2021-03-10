@@ -43,6 +43,7 @@ class DepthSequenceGenerator(Sequence):
                  feature=None,
                  augment_fn=None,
                  format_fn=None,
+                 shuffle=True,
                  preprocess_mode='caffe'):
 
         if type(X) is dict:
@@ -76,6 +77,7 @@ class DepthSequenceGenerator(Sequence):
         self.augment_fn = augment_fn
         self.format_fn = format_fn
         self.preprocess_mode = preprocess_mode
+        self.shuffle = shuffle
 
 
     def __len__(self):
@@ -101,6 +103,7 @@ class DepthSequenceGenerator(Sequence):
 
     def on_epoch_end(self):
         """Shuffle the examples, not just batches via fit_generator."""
-        p = np.random.permutation(len(self.X))
-        self.X = self.X[p]
-        self.y = self.y[p]
+        if self.shuffle:
+            p = np.random.permutation(len(self.X))
+            self.X = self.X[p]
+            self.y = self.y[p]

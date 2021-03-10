@@ -84,6 +84,7 @@ class WellLoader:
                  label_resolution=32,
                  collapse_missing=True,
                  use_dummy_labels=False,
+                 labels_ext='_labels.npy',
                  use_image=True,
                  use_pseudoGR=False,
                  use_logs=False,
@@ -110,7 +111,7 @@ class WellLoader:
 
         # check for labels
         if not self.use_dummy_labels:
-            self.labels_path = self._get_data_path('_labels.npy', assert_exists=True)
+            self.labels_path = self._get_data_path(labels_ext, assert_exists=True)
         else:
             print('Loading well with dummy labels. DO NOT TRAIN ON THIS WELL!')
             assert self.collapse_missing, 'Always collapse the dummy labels.'
@@ -134,11 +135,13 @@ class WellLoader:
             self.logs_args = {**defaults.DEFAULT_LOGS_ARGS, **logs_args}
 
 
-    def load_data(self, label_names, aggregate=True, random_shift=False):
+    def load_data(self, label_names, skip=2, aggregate=True, random_shift=False):
         """
         Load the data into X/y attributes. Note: `X` is a dict.
         """
         print('Loading Well: ', self.well_name, ' from ', self.data_path)
+
+        self.skip = skip
 
         if self.use_dummy_labels:
             print('Loading well with dummy labels. DO NOT TRAIN ON THIS WELL!')
@@ -221,7 +224,7 @@ class WellLoader:
 
 
         # Remove 0's and 1's from data if `collapse_missing`
-        collapse_fn = lambda x: x[np.where(self._y > 1)] if self.collapse_missing else lambda x: x
+        collapse_fn = lambda x: x[np.where(self._y >= self.skip)] if self.collapse_missing else lambda x: x
         self.X = {'depth': collapse_fn(depth),
                   'top'  : collapse_fn(self._tops),
                   'base' : collapse_fn(self._bottoms)}
@@ -236,7 +239,7 @@ class WellLoader:
             self.X['logs'] = np.array([(self._logs(d)).flatten() for d in self.X['depth']])
 
         self.y = collapse_fn(self._y)
-        self.y = self.y - 2 if self.collapse_missing else self.y
+        self.y = self.y - self.skip if self.collapse_missing else self.y
 
         print('Feature shapes: ', [(k, v.shape) for k, v in self.X.items()])
 
@@ -270,7 +273,7 @@ class WellLoader:
     ### Make Output Data ###
     ###++++++++++++++++++###
 
-    def make_striplog(self, labels=None, save_csv=None):
+    def make_striplog(self, labels=None, save_csv=None, component_dict=strip_config.facies):
         """
         Make and return striplog. Optionally save as csv to `save_csv`.
         If labels is None, uses uncollapsed self._y as labels.
@@ -282,13 +285,14 @@ class WellLoader:
                 labels = self._y
                 using_true_labels = True
         elif not np.array_equal(labels, self._y):
+
             labels = self._expand_preds(labels)
             using_true_labels = False
         else:
             raise ValueError('Something is fishy...')
 
         intervals = []
-        facies_keys = list(strip_config.facies.keys())
+        facies_keys = list(component_dict.keys())
 
         current_label = labels[0]
         current_top, current_bottom = self._tops[0], self._bottoms[0]
@@ -299,7 +303,7 @@ class WellLoader:
             if labels[i] != current_label or i == (labels.size-1):
                 # close previous interval
                 descrip = facies_keys[current_label]
-                component = strip_config.facies[descrip]
+                component = component_dict[descrip]
                 interval = Interval(top=current_top,
                                     base=current_bottom,
                                     description = descrip,
@@ -331,17 +335,19 @@ class WellLoader:
         return striplog
 
 
-    def _expand_preds(self, preds):
+    def _expand_preds(self, preds, skip):
         """
         Make new preds array by 'uncollapsing' preds like self._y labels.
-        In other words, keep [0,1] labels from self._y + fill in new labels from preds.
+        In other words, keep [0] labels from self._y + fill in new labels from preds.
+
+        `skip` should be the number of non-train classes (none, bad-sand, etc.)
         """
         if not self.collapse_missing:
             return preds
         else:
             preds = np.argmax(preds, axis=1) if preds.ndim > 1 else preds
             labels = np.copy(self._y)
-            labels[np.where(labels > 1)] = (preds + 2)
+            labels[np.where(labels >= self.skip)] = (preds + self.skip)
             print(np.bincount(self._y))
             print(np.bincount(labels))
             return labels

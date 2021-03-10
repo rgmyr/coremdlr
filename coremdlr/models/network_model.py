@@ -1,3 +1,4 @@
+import gc
 import numpy as np
 
 import tensorflow as tf
@@ -75,7 +76,8 @@ class NetworkModel(FeatureModel, PredictorModel):
             'batch_size' : self.fit_args.get('batch_size', 1),
             'feature' : self.feature,
             'augment_fn' : None,
-            'format_fn' : None
+            'format_fn' : None,
+            'shuffle' : False,
         }
         callbacks = self.fit_args.pop('callbacks', [])
 
@@ -93,7 +95,7 @@ class NetworkModel(FeatureModel, PredictorModel):
         _batch_X, _batch_y = train_gen[0]
         print('Shapes of `(batch_X, batch_y)`: {}, {}'.format(_batch_X.shape, _batch_y.shape))
 
-        self.val_generator_args = {**self.train_generator_args, **{'batch_size': 1}}
+        self.val_generator_args = {**self.train_generator_args}#, **{'batch_size': 1}}
         val_gen = DepthSequenceGenerator(dataset.X_test, dataset.y_test, self.sequence_size, **self.val_generator_args)
 
         hist = self.network.fit_generator(
@@ -103,8 +105,11 @@ class NetworkModel(FeatureModel, PredictorModel):
             validation_data=val_gen,
             use_multiprocessing=False,
             workers=1,
-            shuffle=False
+            verbose=1,
+            shuffle=True, #False
         )
+
+        gc.collect()
 
         return min(hist.history['val_loss'])
 

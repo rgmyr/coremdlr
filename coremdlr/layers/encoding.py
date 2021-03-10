@@ -92,14 +92,14 @@ class Encoding(Layer):
             raise ValueError('Encoding input should have shape BxNxD or BxHxWxD')
 
         # Residual vectors
-        R = x - self.codes
+        #R = x - self.codes
 
-        """Residual vectors: OLD WAY
+        # Residual vectors: OLD WAY
         n = x.shape[1]
         _x_i = K.repeat_elements(x, self.K, 1)
         _c_k = K.tile(self.codes, (n, 1))
         R = K.reshape(_x_i - _c_k, (-1, n, self.K, self.D))
-        """
+
 
         # Assignment weights, optional dropout when training
         if self.dropout_rate and K.learning_phase():
