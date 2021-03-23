@@ -56,4 +56,4 @@ The `notebooks` folder contains some random notebooks and a `figures` subdirecto
 
 ## Data
 
-Current data consists of 12 UK Contiential Shelf wells from Q204 and Q205. Please check out the data folder for more information and licensing.
+Current data consists of 12 UK Contiential Shelf wells from Q204 and Q205. Please check out the data folder for more information and licensing. The full dataset is here: https://figshare.com/articles/dataset/UKCS_Q204_Q205_Subsurface_Data_products_for_Machine_Learning_Study/14265689 including the images.
