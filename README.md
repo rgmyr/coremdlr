@@ -1,5 +1,7 @@
 # `coremdlr`
 
+[![DOI](https://zenodo.org/badge/170920628.svg)](https://zenodo.org/badge/latestdoi/170920628)
+
 *Note, this repo is part of research that has been submitted to **[Frontiers Earth Science](https://www.frontiersin.org/journals/earth-science)**, the paper name and DOI will be included once released!*
 
 This repo contains code for modeling lithology and facies in core photo + well log datasets, using both deep learning / computer vision and traditional machine learning approaches.
