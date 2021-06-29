@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/170920628.svg)](https://zenodo.org/badge/latestdoi/170920628)
 
-*Note, this repo is part of research that has been accepted in **[Frontiers Earth Science](https://www.frontiersin.org/articles/10.3389/feart.2021.659611/abstract)**, please cite that paper with DOI (doi: 10.3389/feart.2021.659611). if you find this code useful. Full paper coming soon!*
+*Note, this repo is part of research that has been accepted in **[Frontiers Earth Science](https://www.frontiersin.org/articles/10.3389/feart.2021.659611/abstract)**, please cite that paper with DOI (doi: 10.3389/feart.2021.659611). if you find this code useful. Full paper is here!*
 
 This repo contains code for modeling lithology and facies in core photo + well log datasets, using both deep learning / computer vision and traditional machine learning approaches.
 
